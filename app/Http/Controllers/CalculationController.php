@@ -51,7 +51,7 @@ class CalculationController extends Controller
 
     		$data[$state->id] = array(
     			'name' => $state->name,
-    			'average_collected_taxes' => ($sum / $count)
+    			'average_collected_taxes' => round(($sum / $count),2)
     		);
     	}
 
@@ -67,7 +67,7 @@ class CalculationController extends Controller
     	foreach($country->states as $state){
     		$data[$state->id] = array(
     			'name' => $state->name,
-    			'average_tax_rate' => $state->counties->avg('tax_rate')
+    			'average_tax_rate' => round($state->counties->avg('tax_rate'),2)
     		);
     	}
 
@@ -88,18 +88,18 @@ class CalculationController extends Controller
     		}
     	}
 
-    	return ($sum / $count);
+    	return round(($sum / $count),2);
     }
 
     //-- Collected overall taxes of the country --
     public function overallCollectedTaxes($country_id){
         $country = Country::find($country_id);
 
-        $data['sum'] = 0;
+        $data = 0;
 
         foreach($country->states as $state){
             foreach($state->counties as $county){
-            	$data['sum'] += $county->taxes->sum('tax_collected');
+            	$data += $county->taxes->sum('tax_collected');
         	}
         }
 

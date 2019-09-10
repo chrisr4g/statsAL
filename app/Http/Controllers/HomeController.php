@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\CalculationController;
+use App\Country;
 
 class HomeController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *
@@ -18,6 +21,7 @@ class HomeController extends Controller
         $this->middleware('auth');
 
         $this->Calculation = new CalculationController;
+        $this->Country = new Country;
     }
 
     /**
@@ -27,24 +31,37 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $dashboardData['country'] = $this->Country->first(); // Country type object
+        
+        /**
+         *  array( 
+         *      array('name' => 'name of the state', 'taxes_collected' => 'number with 2 decimals'), 
+         *      array('name' => 'name of the 2nd state', 'taxes_collected' => 'number with 2 decimals')
+         *      ...
+         *  )
+         */
+        $dashboardData['taxes']['taxesCollectedPerState'] = $this->Calculation->taxesCollectedPerState($dashboardData['country']->id);
 
-        dd(
-            $this->Calculation->overallCollectedTaxes(1),
-            $this->Calculation->taxesCollectedPerState(1),
-            $this->Calculation->averageCollectedTaxPerState(1),
-            $this->Calculation->averageCountyTaxRatePerState(1),
-            $this->Calculation->avarageTaxRate(1)
-        );
+        /**
+         *  array( 
+         *      array('name' => 'name of the state', 'average_collected_taxes' => 'number with 2 decimals'), 
+         *      array('name' => 'name of the 2nd state', 'average_collected_taxes' => 'number with 2 decimals')
+         *      ...
+         *  )
+         */
+        $dashboardData['taxes']['averageCollectedTaxPerState'] = $this->Calculation->averageCollectedTaxPerState($dashboardData['country']->id);
 
-        // $countries = Country::with(['states', 'states.counties', 'states.counties.taxes'])->get()->toArray();
-        $countries = Country::all();
-        foreach ($countries as $country) {
-            foreach ($country->states as $country_state) {
-                foreach ($country_state->counties as $counties) {
-                    dd($counties->taxes->sum('tax_collected'),$counties);
-                }
-            }
-        }
+        /**
+         *  array( 
+         *      array('name' => 'name of the state', 'average_tax_rate' => 'number with 2 decimals'), 
+         *      array('name' => 'name of the 2nd state', 'average_tax_rate' => 'number with 2 decimals')
+         *      ...
+         *  )
+         */
+        $dashboardData['taxes']['averageCountyTaxRatePerState'] = $this->Calculation->averageCountyTaxRatePerState($dashboardData['country']->id);
+
+        $dashboardData['taxes']['avarageTaxRate'] = $this->Calculation->avarageTaxRate($dashboardData['country']->id); // Average Tax Rate of the country, max 2 decimals
+        $dashboardData['taxes']['overallCollectedTaxes'] = $this->Calculation->overallCollectedTaxes($dashboardData['country']->id); // Sum of the collected taxes of the country
 
         // $sql = DB::query();
         // $sql->from('countries');
@@ -54,12 +71,9 @@ class HomeController extends Controller
         // $sql->join('taxes', 'taxes.county_id', '=', 'counties.id');
         // $sql->groupBy('states.id');
         // $sql->selectRaw('MAX(states.name) AS nume_stat, SUM(taxes.tax_collected) AS taxa_per_stat');
+        // $taxesCollected = $sql->get();
 
-        $taxesCollected = $sql->get();
-
-        foreach($taxesCollected as $taxCollected){
-            dd($taxCollected->nume_stat);
-        }
+        dd($dashboardData);
 
         return view('home',compact($dashboardData));
     }
