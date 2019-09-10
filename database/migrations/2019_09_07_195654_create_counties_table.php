@@ -17,7 +17,7 @@ class CreateCountiesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('state_id');
             $table->string('name',50);
-            $table->double('tax_rate',3,2);
+            $table->double('tax_rate',4,2);
             $table->timestamps();
 
             $table->index(['state_id','name']);
