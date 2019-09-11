@@ -10,6 +10,7 @@
     <title>@yield('title') - Dashboard</title>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -76,5 +77,30 @@
             @yield('content')
         </main>
     </div>
+</div>
+</main>
 </body>
+
+    {{-- <script type="application/javascript">
+        var tcps_Chart = document.getElementById('taxesCollectedPerState');    
+        var taxesCollectedPerState_Chart = new Chart(tcps_Chart, {
+            type: 'bar',
+            data: [20, 10],
+            options: options
+        });
+
+        var actps_Chart = document.getElementById('averageCollectedTaxPerState');
+        var averageCollectedTaxPerState_Chart = new Chart(actps_Chart, {
+            type: 'bar',
+            data: [10, 20],
+            options: options
+        });
+
+        var actrps_Chart = document.getElementById('averageCountyTaxRatePerState');
+        var averageCountyTaxRatePerState_Chart = new Chart(actrps_Chart, {
+            type: 'bar',
+            data: [20, 80],
+            options: options
+        });
+    </script> --}}
 </html>

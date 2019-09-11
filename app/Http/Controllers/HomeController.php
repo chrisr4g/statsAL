@@ -63,18 +63,6 @@ class HomeController extends Controller
         $dashboardData['taxes']['avarageTaxRate'] = $this->Calculation->avarageTaxRate($dashboardData['country']->id); // Average Tax Rate of the country, max 2 decimals
         $dashboardData['taxes']['overallCollectedTaxes'] = $this->Calculation->overallCollectedTaxes($dashboardData['country']->id); // Sum of the collected taxes of the country
 
-        // $sql = DB::query();
-        // $sql->from('countries');
-        // $sql->whereIn('countries.id' ,1);
-        // $sql->join('states', 'states.country_id', '=', 'countries.id');
-        // $sql->join('counties', 'counties.state_id', '=', 'states.id');
-        // $sql->join('taxes', 'taxes.county_id', '=', 'counties.id');
-        // $sql->groupBy('states.id');
-        // $sql->selectRaw('MAX(states.name) AS nume_stat, SUM(taxes.tax_collected) AS taxa_per_stat');
-        // $taxesCollected = $sql->get();
-
-        dd($dashboardData);
-
-        return view('home',compact($dashboardData));
+        return view('home',compact('dashboardData'));
     }
 }
